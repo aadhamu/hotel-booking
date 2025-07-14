@@ -2,8 +2,9 @@ services:
   - type: web
     name: hotel-booking
     env: docker
-    region: frankfurt
     dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt
     envVars:
       - key: DB_HOST
         value: das112.truehost.cloud
