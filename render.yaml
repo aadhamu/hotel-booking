@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: hotel-booking-php
+    env: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        value: das112.truehost.cloud
+      - key: DB_USER
+        value: royivaiy_hotel_booking-user
+      - key: DB_PASS
+        value: destinY2025!
+      - key: DB_NAME
+        value: royivaiy_hotel_booking
