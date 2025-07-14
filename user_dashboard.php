@@ -25,237 +25,466 @@ $booking_result = $booking_query->get_result();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | Etihad Hotel</title>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-/* Reset & Font */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
-/* Body Background */
-body {
-    background: #f8f8f8;
-    color: #333;
-    line-height: 1.6;
-    padding-top: 100px; /* to prevent content hiding behind navbar */
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-/* Container */
-.container {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
-}
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
 
-/* Heading */
-h2, h3 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    animation: fadeInUp 1s ease-out;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-/* Table Styling */
-table {
-    width: 100%;
-    margin-bottom: 40px;
-    border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    border-radius: 10px;
-    overflow: hidden;
-    animation: fadeInUp 1.2s ease-out;
-}
+        /* Navigation */
+        nav {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 40px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
 
-th, td {
-    padding: 15px 20px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
 
-th {
-    background-color: #000; /* dark like navbar */
-    color: white;
-    font-size: 1rem;
-}
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
 
-tr:hover {
-    background-color: #f9f9f9;
-}
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-tr:last-child td {
-    border-bottom: none;
-}
+        .nav-links a:hover {
+            color: var(--accent);
+        }
 
-/* Inputs (Date pickers) */
-input[type="date"] {
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
+        .nav-links i {
+            font-size: 1.1rem;
+        }
 
-input[type="date"]:focus {
-    border-color: #f9c74f;
-}
+        /* Dashboard Content */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
 
-/* Buttons */
-button {
-    padding: 10px 20px;
-    background: #f9c74f;
-    color: #000;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease, color 0.3s ease;
-}
+        .welcome-message {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
 
-button:hover {
-    background: #f9844a;
-    color: #fff;
-}
+        .email-display {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
 
-/* Back Button (Link style) */
-.back-btn {
-    display: inline-block;
-    background: #f9c74f;
-    color: #000;
-    padding: 10px 20px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-bottom: 20px;
-    transition: background 0.3s ease, color 0.3s ease;
-}
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
 
-.back-btn:hover {
-    background: #f9844a;
-    color: #fff;
-}
+        .back-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
 
-/* Small text */
-small {
-    color: #666;
-}
+        /* Cards Section */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
 
-/* Animation */
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
 
-/* Responsive */
-@media screen and (max-width: 768px) {
-    th, td {
-        padding: 10px 12px;
-    }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
 
-    button, .back-btn {
-        padding: 8px 16px;
-    }
-}
-</style>
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-</head>
-<body>
+        .card-title i {
+            color: var(--accent);
+        }
 
-<div class="container">
-    <!-- Back Button -->
-    <div style="text-align: left; margin-bottom: 20px;">
-    <a href="index.php" class="back-btn">← Back to Home</a>
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
 
-    </div>
+        .card-desc {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
 
-    <h2>Available Rooms</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Room Name</th>
-            <th>Price</th>
-            <th>Check-in</th>
-            <th>Check-out</th>
-            <th>Action</th>
-        </tr>
-        <?php while ($room = $rooms->fetch_assoc()): ?>
-        <tr>
-            <td><?= $room['id'] ?></td>
-            <td><?= $room['room_name'] ?></td>
-            <td>₦<?= number_format($room['price'], 2) ?></td>
-            <td><input type="date" id="check_in_<?= $room['id'] ?>" required></td>
-            <td><input type="date" id="check_out_<?= $room['id'] ?>" required></td>
-            <td>
-                <button onclick="payWithFlutterwave<?= $room['id'] ?>()">Pay & Book</button>
-            </td>
-        </tr>
+        /* Tables */
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin: 30px 0 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
 
-        <script>
-        function payWithFlutterwave<?= $room['id'] ?>() {
-            const checkIn = document.getElementById("check_in_<?= $room['id'] ?>").value;
-            const checkOut = document.getElementById("check_out_<?= $room['id'] ?>").value;
-            const userEmail = "user@example.com"; // Replace with PHP session email if available
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent);
+        }
 
-            if (!checkIn || !checkOut) {
-                alert("Please select check-in and check-out dates.");
-                return;
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Form Elements */
+        input[type="date"] {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            width: 100%;
+            max-width: 200px;
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Ticket Badge */
+        .ticket-badge {
+            background-color: var(--light);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
             }
 
-            FlutterwaveCheckout({
-                public_key: "FLWPUBK_TEST-d295a228d1e11a71aa6e1908c1f595a8-X",
-                tx_ref: "TXREF_" + Math.floor(Math.random() * 1000000000),
-                amount: <?= $room['price'] ?>,
-                currency: "NGN", // Currency already set to Naira
-                payment_options: "card, mobilemoney, ussd",
-                customer: {
-                    email: userEmail,
-                    phonenumber: "N/A",
-                    name: "Hotel User"
-                },
-                callback: function (data) {
-                    window.location.href = `book_room.php?room_id=<?= $room['id'] ?>&check_in=${checkIn}&check_out=${checkOut}&tx_ref=${data.tx_ref}`;
-                },
-                customizations: {
-                    title: "Hotel Booking",
-                    description: "Booking for <?= $room['room_name'] ?>",
-                    logo: "https://yourhotel.com/logo.png"
-                }
-            });
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 12px 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
         }
-        </script>
 
-        <?php endwhile; ?>
-    </table>
-    <a href="my_tickets.php" class="back-btn">🎫 My Tickets</a>
+        @media (max-width: 576px) {
+            nav {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
 
-    <!-- <h3>Your Bookings</h3>
-    <table>
-        <tr>
-            <th>Room</th>
-            <th>Check-in</th>
-            <th>Check-out</th>
-            <th>Ticket</th>
-        </tr>
-        <?php// while ($booking = $booking_result->fetch_assoc()): ?>
-        <tr>
-            <td><?//= $booking['room_name'] ?></td>
-            <td><?//= $booking['check_in'] ?></td>
-            <td><?//= $booking['check_out'] ?></td>
-            <td><strong><?//= $booking['ticket'] ?></strong> <br><small>Keep safe!</small></td>
-        </tr>
-        <?php// endwhile; ?>
-    </table> -->
-</div>
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
 
+            .table-container {
+                border-radius: 0;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-logo">Etihad Hotel</div>
+        <div class="nav-links">
+            <a href="explore_rooms.php"><i class="fas fa-door-open"></i> Rooms</a>
+            <a href="user_dashboard.php" class="active"><i class="fas fa-user"></i> Dashboard</a>
+            <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <div>
+                <h1 class="welcome-message">Welcome back</h1>
+            </div>
+            <a href="index.php" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+
+        <div class="cards-container">
+            <div class="card fade-in">
+                <h3 class="card-title"><i class="fas fa-door-open"></i> Available Rooms</h3>
+                <p class="card-value"><?= $rooms->num_rows ?></p>
+                <p class="card-desc">Rooms ready for booking</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3 class="card-title"><i class="fas fa-ticket-alt"></i> Your Bookings</h3>
+                <p class="card-value"><?= $booking_result->num_rows ?></p>
+                <p class="card-desc">Your current reservations</p>
+            </div>
+
+            <div class="card fade-in">
+                <h3 class="card-title"><i class="fas fa-star"></i> Member Since</h3>
+                <p class="card-value"><?= date('Y', strtotime($_SESSION['created_at'] ?? 'now')) ?></p>
+                <p class="card-desc">Thank you for being with us</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">Available Rooms</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Price</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($room = $rooms->fetch_assoc()): ?>
+                    <tr class="fade-in">
+                        <td>
+                            <strong><?= $room['room_name'] ?></strong><br>
+                            <small>Room ID: <?= $room['id'] ?></small>
+                        </td>
+                        <td>₦<?= number_format($room['price'], 2) ?></td>
+                        <td><input type="date" id="check_in_<?= $room['id'] ?>" required></td>
+                        <td><input type="date" id="check_out_<?= $room['id'] ?>" required></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="payWithFlutterwave<?= $room['id'] ?>()">
+                                <i class="fas fa-credit-card"></i> Book Now
+                            </button>
+                        </td>
+                    </tr>
+<script>
+function payWithFlutterwave<?= $room['id'] ?>() {
+    const checkIn = document.getElementById("check_in_<?= $room['id'] ?>").value;
+    const checkOut = document.getElementById("check_out_<?= $room['id'] ?>").value;
+    const price = <?= $room['price'] ?>;
+
+    if (!checkIn || !checkOut) {
+        alert("Please select both check-in and check-out dates.");
+        return;
+    }
+    if (new Date(checkOut) <= new Date(checkIn)) {
+        alert("Check-out date must be after check-in date.");
+        return;
+    }
+
+    FlutterwaveCheckout({
+        public_key: "FLWPUBK-8a0a8fc1a126ab8837395696e4d569ca-X", // your live Flutterwave public key
+        tx_ref: "TKT-" + Date.now(),
+        amount: price,
+        currency: "NGN",
+        customer: {
+            email: "<?= $_SESSION['email'] ?? 'guest@example.com' ?>",
+            name: "<?= $_SESSION['name'] ?? 'Guest' ?>"
+        },
+        customizations: {
+            title: "Etihad Hotel Booking",
+            description: "Payment for <?= $room['room_name'] ?>",
+            logo: "https://your-logo.com/logo.png"
+        },
+      callback: function(response) {
+    console.log("Payment callback response:", response);
+
+    const txId = response.transaction_id || response.transactionId; // supports both formats
+    const status = response.status?.toLowerCase(); // handle undefined/null safely
+
+    if (status === "successful" || status === "success" || status === "completed") {
+        if (txId) {
+            window.location.href = `verify_payment.php?transaction_id=${txId}&room_id=<?= $room['id'] ?>&check_in=${checkIn}&check_out=${checkOut}`;
+        } else {
+            alert("❌ Payment succeeded but no transaction ID received.");
+        }
+    } else {
+        alert("❌ Payment was not completed. Status: " + response.status);
+    }
+},
+
+    });
+}
+</script>
+
+
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <a href="my_tickets.php" class="btn btn-secondary">
+            <i class="fas fa-ticket-alt"></i> View My Tickets
+        </a>
+    </div>
 </body>
 </html>
+
+
+
+
